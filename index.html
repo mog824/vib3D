@@ -2225,7 +2225,7 @@
                 reader.readAsArrayBuffer(asset.file);
             });
         }
-
+        
         function renderObjectToImage(object) {
             const toRemove = [];
             sharedScene.traverse((child) => {
@@ -2238,10 +2238,11 @@
 
             object.traverse((child) => {
                 if (child.isMesh) {
+                    // Always apply clean material - don't rely on broken texture references
                     child.material = new THREE.MeshStandardMaterial({ 
-                        color: 0x7799bb,
-                        roughness: 0.5,
-                        metalness: 0.1,
+                        color: 0x7a9cbb,  // Nice steel blue
+                        roughness: 0.55,
+                        metalness: 0.15,
                         side: THREE.DoubleSide
                     });
                 }
@@ -2655,8 +2656,12 @@
 
             object.traverse((child) => {
                 if (child.isMesh) {
+                    // Always apply clean material
                     child.material = new THREE.MeshStandardMaterial({ 
-                        color: 0x7799bb, roughness: 0.5, metalness: 0.1, side: THREE.DoubleSide
+                        color: 0x7a9cbb,  // Nice steel blue
+                        roughness: 0.55,
+                        metalness: 0.15,
+                        side: THREE.DoubleSide
                     });
                 }
             });
