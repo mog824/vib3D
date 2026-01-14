@@ -2146,23 +2146,47 @@
             const islandText = document.getElementById('islandText');
             const islandProgressFill = document.getElementById('islandProgress');
             
+            // Count how many actually need rendering
+            const needsRender = assets.filter(a => !thumbnailCache.has(a.path));
+            
+            // If everything is cached, just apply cached thumbnails and skip the progress UI
+            if (needsRender.length === 0) {
+                assets.forEach(asset => {
+                    const containerId = `preview-${encodeId(asset.path)}`;
+                    const container = document.getElementById(containerId);
+                    if (container && thumbnailCache.has(asset.path)) {
+                        container.innerHTML = `<img src="${thumbnailCache.get(asset.path)}" alt="${asset.name}">`;
+                    }
+                });
+                return;
+            }
+            
             // Show dynamic island
             island.classList.remove('done');
             island.classList.add('active');
             islandIcon.textContent = '🎨';
             
+            let rendered = 0;
             for (let i = 0; i < assets.length; i++) {
                 const asset = assets[i];
-                const progress = ((i + 1) / assets.length) * 100;
-                
-                // Update dynamic island
-                islandText.textContent = `Rendering ${i + 1} of ${assets.length}`;
-                islandProgressFill.style.width = progress + '%';
 
                 const containerId = `preview-${encodeId(asset.path)}`;
                 const container = document.getElementById(containerId);
                 
                 if (container) {
+                    // Check cache first
+                    if (thumbnailCache.has(asset.path)) {
+                        container.innerHTML = `<img src="${thumbnailCache.get(asset.path)}" alt="${asset.name}">`;
+                        continue; // Skip rendering, use cached version
+                    }
+                    
+                    rendered++;
+                    const progress = (rendered / needsRender.length) * 100;
+                    
+                    // Update dynamic island
+                    islandText.textContent = `Rendering ${rendered} of ${needsRender.length}`;
+                    islandProgressFill.style.width = progress + '%';
+                    
                     try {
                         const dataUrl = await renderSingleThumbnail(asset);
                         if (dataUrl) {
