@@ -1713,10 +1713,13 @@
 
         // State
         let assets = [];
+        let textureFiles = new Map(); // Store texture files
         let thumbnailCache = new Map();
         let sharedRenderer = null;
         let sharedScene = null;
         let sharedCamera = null;
+        
+        const textureFormats = ['.png', '.jpg', '.jpeg', '.tga', '.bmp'];
 
         // DOM Elements
         const dropZone = document.getElementById('dropZone');
@@ -1823,6 +1826,7 @@
             loadingOverlay.classList.add('active');
             assets = [];
             thumbnailCache.clear();
+            textureFiles.clear();
             
             const items = e.dataTransfer.items;
             const files = e.dataTransfer.files;
@@ -1876,6 +1880,10 @@
                             file: file
                         });
                         loadingProgress.textContent = `Found ${assets.length} assets...`;
+                    } else if (textureFormats.includes(ext)) {
+                        // Store texture file
+                        const file = await getFile(entry);
+                        textureFiles.set(entry.name.toLowerCase(), file);
                     }
                 } else if (entry.isDirectory) {
                     const reader = entry.createReader();
@@ -2219,7 +2227,7 @@
         async function renderSingleThumbnail(asset) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
-                reader.onload = (e) => {
+                reader.onload = async (e) => {
                     const arrayBuffer = e.target.result;
                     try {
                         let object = null;
@@ -2227,6 +2235,43 @@
                         if (asset.ext === '.fbx') {
                             const loader = new THREE.FBXLoader();
                             object = loader.parse(arrayBuffer, '');
+                            
+                            // If we have texture files, manually apply them
+                            if (textureFiles.size > 0 && object) {
+                                const singleTexture = textureFiles.values().next().value;
+                                
+                                // Convert file to data URL instead of blob URL
+                                const dataUrl = await new Promise((res) => {
+                                    const fr = new FileReader();
+                                    fr.onload = () => res(fr.result);
+                                    fr.onerror = () => res(null);
+                                    fr.readAsDataURL(singleTexture);
+                                });
+                                
+                                if (dataUrl) {
+                                    const textureLoader = new THREE.TextureLoader();
+                                    const texture = await new Promise((res) => {
+                                        textureLoader.load(dataUrl, (t) => {
+                                            t.flipY = false;
+                                            res(t);
+                                        }, undefined, () => res(null));
+                                    });
+                                    
+                                    if (texture) {
+                                        object.traverse((child) => {
+                                            if (child.isMesh && child.material) {
+                                                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                                                materials.forEach(m => {
+                                                    m.map = texture;
+                                                    m.color = new THREE.Color(1, 1, 1);
+                                                    m.needsUpdate = true;
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                            
                         } else if (asset.ext === '.obj') {
                             const loader = new THREE.OBJLoader();
                             const text = new TextDecoder().decode(arrayBuffer);
@@ -2262,13 +2307,26 @@
 
             object.traverse((child) => {
                 if (child.isMesh) {
-                    // Always apply clean material - don't rely on broken texture references
-                    child.material = new THREE.MeshStandardMaterial({ 
-                        color: 0x7a9cbb,  // Nice steel blue
-                        roughness: 0.55,
-                        metalness: 0.15,
-                        side: THREE.DoubleSide
-                    });
+                    if (child.material) {
+                        const materials = Array.isArray(child.material) ? child.material : [child.material];
+                        materials.forEach(m => {
+                            m.side = THREE.DoubleSide;
+                            
+                            // If no texture, use fallback color
+                            if (!m.map) {
+                                m.color = new THREE.Color(0x7a9cbb);
+                                m.roughness = 0.55;
+                                m.metalness = 0.15;
+                            }
+                        });
+                    } else {
+                        child.material = new THREE.MeshStandardMaterial({ 
+                            color: 0x7a9cbb,
+                            roughness: 0.55,
+                            metalness: 0.15,
+                            side: THREE.DoubleSide
+                        });
+                    }
                 }
             });
 
@@ -2557,6 +2615,7 @@
             assetContainer.innerHTML = '';
             assets = [];
             thumbnailCache.clear();
+            textureFiles.clear();
             if (sharedRenderer) {
                 sharedRenderer.dispose();
                 sharedRenderer = null;
@@ -2639,6 +2698,41 @@
 
                 if (asset.ext === '.fbx') {
                     object = new THREE.FBXLoader().parse(arrayBuffer, '');
+                    
+                    // Apply texture if available
+                    if (textureFiles.size > 0 && object) {
+                        const singleTexture = textureFiles.values().next().value;
+                        
+                        const dataUrl = await new Promise((res) => {
+                            const fr = new FileReader();
+                            fr.onload = () => res(fr.result);
+                            fr.onerror = () => res(null);
+                            fr.readAsDataURL(singleTexture);
+                        });
+                        
+                        if (dataUrl) {
+                            const textureLoader = new THREE.TextureLoader();
+                            const texture = await new Promise((res) => {
+                                textureLoader.load(dataUrl, (t) => {
+                                    t.flipY = false;
+                                    res(t);
+                                }, undefined, () => res(null));
+                            });
+                            
+                            if (texture) {
+                                object.traverse((child) => {
+                                    if (child.isMesh && child.material) {
+                                        const materials = Array.isArray(child.material) ? child.material : [child.material];
+                                        materials.forEach(m => {
+                                            m.map = texture;
+                                            m.color = new THREE.Color(1, 1, 1);
+                                            m.needsUpdate = true;
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    }
                 } else if (asset.ext === '.obj') {
                     object = new THREE.OBJLoader().parse(new TextDecoder().decode(arrayBuffer));
                 } else if (asset.ext === '.gltf' || asset.ext === '.glb') {
@@ -2680,13 +2774,30 @@
 
             object.traverse((child) => {
                 if (child.isMesh) {
-                    // Always apply clean material
-                    child.material = new THREE.MeshStandardMaterial({ 
-                        color: 0x7a9cbb,  // Nice steel blue
-                        roughness: 0.55,
-                        metalness: 0.15,
-                        side: THREE.DoubleSide
-                    });
+                    if (child.material) {
+                        const materials = Array.isArray(child.material) ? child.material : [child.material];
+                        materials.forEach(m => {
+                            m.side = THREE.DoubleSide;
+                            
+                            // Check if texture loaded successfully
+                            const hasTexture = m.map && m.map.image && m.map.image.width > 0;
+                            
+                            if (!hasTexture) {
+                                // No texture - use fallback color
+                                m.map = null;
+                                m.color = new THREE.Color(0x7a9cbb);
+                                m.roughness = 0.55;
+                                m.metalness = 0.15;
+                            }
+                        });
+                    } else {
+                        child.material = new THREE.MeshStandardMaterial({ 
+                            color: 0x7a9cbb,
+                            roughness: 0.55,
+                            metalness: 0.15,
+                            side: THREE.DoubleSide
+                        });
+                    }
                 }
             });
 
