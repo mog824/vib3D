@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssetVault - 3D Asset Browser</title>
+    <title>vib3D - 3D Asset Browser</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #16161f;
-            --bg-card-hover: #1c1c28;
-            --accent: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.4);
-            --accent-soft: rgba(99, 102, 241, 0.1);
-            --text-primary: #f1f1f4;
-            --text-secondary: #8b8b9e;
-            --text-muted: #5a5a6e;
-            --border: #2a2a3a;
-            --success: #22c55e;
-            --error: #ef4444;
+            --bg-primary: #151518;
+            --bg-secondary: #1c1c21;
+            --bg-card: #222228;
+            --bg-card-hover: #2a2a32;
+            --bg-input: #1a1a1f;
+            --accent: #5eead4;
+            --accent-soft: rgba(94, 234, 212, 0.1);
+            --accent-glow: rgba(94, 234, 212, 0.15);
+            --accent-border: rgba(94, 234, 212, 0.3);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(255, 255, 255, 0.12);
+            --success: #4ade80;
+            --error: #f87171;
+            --pink: #f472b6;
             --card-size: 220px;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 30px rgba(94, 234, 212, 0.1);
         }
 
         * {
@@ -32,14 +43,14 @@
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'DM Sans', -apple-system, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated background */
+        /* Subtle background gradient */
         .bg-gradient {
             position: fixed;
             top: 0;
@@ -49,39 +60,36 @@
             pointer-events: none;
             z-index: 0;
             background: 
-                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.03) 0%, transparent 70%);
+                radial-gradient(ellipse at 0% 0%, rgba(94, 234, 212, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 100% 100%, rgba(244, 114, 182, 0.02) 0%, transparent 50%);
         }
 
-        /* Auth Pages */
+        /* ========== AUTH PAGES ========== */
         .auth-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
             position: relative;
             z-index: 1;
         }
 
         .auth-box {
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 48px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 48px 44px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            animation: fadeUp 0.6s ease-out;
+            max-width: 400px;
+            box-shadow: var(--shadow-medium);
+            animation: fadeUp 0.5s ease-out;
         }
 
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(16px);
             }
             to {
                 opacity: 1;
@@ -92,35 +100,33 @@
         .auth-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 32px;
+            gap: 14px;
+            margin-bottom: 36px;
         }
 
         .auth-logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-            border-radius: 14px;
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 8px 24px var(--accent-glow);
+            font-size: 26px;
+            box-shadow: var(--shadow-soft), var(--shadow-glow);
         }
 
         .auth-logo-text {
             font-size: 1.75rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
         }
 
         .auth-title {
-            font-size: 1.5rem;
+            font-size: 1.375rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
         }
 
         .auth-subtitle {
@@ -143,13 +149,13 @@
 
         .form-input {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            padding: 14px 18px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
             transition: all 0.2s ease;
         }
 
@@ -166,9 +172,9 @@
         .btn {
             width: 100%;
             padding: 14px 24px;
-            border-radius: 12px;
-            font-family: 'Outfit', sans-serif;
-            font-size: 1rem;
+            border-radius: var(--radius-md);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -176,14 +182,14 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-            color: white;
-            box-shadow: 0 4px 16px var(--accent-glow);
+            background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
+            color: #0f172a;
+            box-shadow: var(--shadow-soft);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px var(--accent-glow);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-medium), var(--shadow-glow);
         }
 
         .btn-primary:active {
@@ -192,7 +198,7 @@
 
         .auth-footer {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 28px;
             color: var(--text-secondary);
             font-size: 0.9rem;
         }
@@ -208,11 +214,11 @@
         }
 
         .auth-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.25);
             color: var(--error);
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border-radius: var(--radius-md);
             margin-bottom: 20px;
             font-size: 0.9rem;
             display: none;
@@ -220,16 +226,9 @@
 
         .auth-error.show {
             display: block;
-            animation: shake 0.4s ease;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* Main App */
+        /* ========== MAIN APP ========== */
         .app-container {
             display: none;
             min-height: 100vh;
@@ -246,36 +245,37 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(20px);
+            background: rgba(21, 21, 24, 0.85);
+            backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border);
-            padding: 16px 32px;
+            padding: 14px 28px;
         }
 
         .header-inner {
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
+            gap: 20px;
         }
 
         .header-logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .header-logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
+            box-shadow: var(--shadow-soft);
         }
 
         .header-logo-text {
@@ -285,26 +285,30 @@
 
         .header-search {
             flex: 1;
-            max-width: 480px;
+            max-width: 420px;
             position: relative;
         }
 
         .header-search-input {
             width: 100%;
-            padding: 12px 16px 12px 44px;
+            padding: 12px 16px 12px 46px;
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.95rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
             transition: all 0.2s ease;
         }
 
         .header-search-input:focus {
             outline: none;
-            border-color: var(--accent);
-            background: var(--bg-card);
+            border-color: var(--accent-border);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .header-search-input::placeholder {
+            color: var(--text-muted);
         }
 
         .header-search-icon {
@@ -318,132 +322,142 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .header-user {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
+            gap: 12px;
+            padding: 8px 16px 8px 10px;
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .header-user:hover {
+            border-color: var(--border-light);
             background: var(--bg-card);
         }
 
         .header-avatar {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-            border-radius: 8px;
+            background: linear-gradient(145deg, var(--pink) 0%, #e879f9 100%);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
             font-size: 0.85rem;
+            color: white;
         }
 
         .header-username {
             font-weight: 500;
             font-size: 0.9rem;
+            color: var(--text-primary);
         }
 
         .btn-logout {
-            padding: 10px 16px;
+            padding: 10px 18px;
             background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             color: var(--text-secondary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.875rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .btn-logout:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: var(--error);
+            background: rgba(248, 113, 113, 0.08);
+            border-color: rgba(248, 113, 113, 0.3);
             color: var(--error);
         }
 
-        /* Drop Zone */
+        /* ========== DROP ZONE ========== */
         .drop-zone {
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 32px;
+            padding: 40px 28px;
         }
 
         .drop-zone-box {
-            border: 2px dashed var(--border);
-            border-radius: 20px;
-            padding: 64px 40px;
+            border: 2px dashed var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 72px 48px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             background: var(--bg-secondary);
             cursor: pointer;
         }
 
-        .drop-zone-box:hover,
+        .drop-zone-box:hover {
+            border-color: var(--accent-border);
+            background: rgba(94, 234, 212, 0.02);
+        }
+
         .drop-zone-box.drag-over {
             border-color: var(--accent);
             background: var(--accent-soft);
-        }
-
-        .drop-zone-box.drag-over {
-            transform: scale(1.01);
+            transform: scale(1.005);
+            box-shadow: var(--shadow-glow);
         }
 
         .drop-zone-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 24px;
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 28px;
             background: var(--accent-soft);
-            border-radius: 20px;
+            border: 1px solid var(--accent-border);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 40px;
         }
 
         .drop-zone-title {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
         }
 
         .drop-zone-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 24px;
+            font-size: 1rem;
         }
 
         .drop-zone-formats {
             display: inline-flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
         .format-badge {
-            padding: 6px 12px;
+            padding: 8px 14px;
             background: var(--bg-card);
-            border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: 'IBM Plex Mono', monospace;
             font-size: 0.8rem;
             color: var(--text-secondary);
         }
 
-        /* Stats Bar */
+        /* ========== STATS BAR ========== */
         .stats-bar {
             display: none;
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 0 32px 24px;
+            padding: 0 28px 28px;
         }
 
         .stats-bar.active {
@@ -456,22 +470,26 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 16px;
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
         }
 
         .stats-info {
             display: flex;
             align-items: center;
-            gap: 24px;
+            gap: 32px;
         }
 
         .stat-item {
             display: flex;
-            align-items: center;
+            align-items: baseline;
             gap: 8px;
         }
 
         .stat-value {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: var(--accent);
         }
@@ -490,13 +508,13 @@
         .size-control {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
         }
 
         .size-slider {
-            width: 120px;
+            width: 100px;
             height: 6px;
             -webkit-appearance: none;
             appearance: none;
@@ -513,33 +531,38 @@
             background: var(--accent);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 8px var(--accent-glow);
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.15s ease;
         }
 
-        .btn-new-folder {
+        .size-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-secondary {
             padding: 10px 20px;
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .btn-new-folder:hover {
+        .btn-secondary:hover {
             background: var(--bg-card-hover);
-            border-color: var(--accent);
+            border-color: var(--accent-border);
         }
 
-        /* Asset Grid */
+        /* ========== ASSET GRID ========== */
         .asset-container {
             display: none;
-            max-width: 1800px;
+            max-width: 1600px;
             margin: 0 auto;
-            padding: 0 32px 32px;
+            padding: 0 28px 40px;
         }
 
         .asset-container.active {
@@ -547,30 +570,59 @@
         }
 
         .category {
-            margin-bottom: 40px;
-            animation: fadeUp 0.5s ease-out;
+            margin-bottom: 44px;
+            animation: fadeUp 0.4s ease-out;
         }
 
         .category-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            padding: 10px 14px;
+            margin-left: -14px;
+            margin-right: -14px;
+            border-radius: var(--radius-md);
+            transition: background 0.2s ease;
+        }
+
+        .category-header:hover {
+            background: var(--bg-card);
+        }
+
+        .category-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+        }
+
+        .category.collapsed .category-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .category.collapsed .asset-grid {
+            display: none;
         }
 
         .category-name {
-            font-size: 1.25rem;
+            font-size: 1.125rem;
             font-weight: 600;
+            color: var(--text-primary);
         }
 
         .category-count {
-            padding: 4px 12px;
+            padding: 5px 14px;
             background: var(--accent-soft);
+            border: 1px solid var(--accent-border);
             color: var(--accent);
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
         }
 
@@ -580,23 +632,21 @@
             gap: 20px;
         }
 
-        /* Asset Card */
+        /* ========== ASSET CARD ========== */
         .asset-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
-            animation: fadeUp 0.4s ease-out backwards;
+            transition: all 0.25s ease;
+            animation: fadeUp 0.35s ease-out backwards;
         }
 
         .asset-card:hover {
             transform: translateY(-4px);
-            border-color: var(--accent);
-            box-shadow: 
-                0 20px 40px -12px rgba(0, 0, 0, 0.4),
-                0 0 0 1px var(--accent-soft);
+            border-color: var(--accent-border);
+            box-shadow: var(--shadow-medium), var(--shadow-glow);
         }
 
         .asset-preview {
@@ -617,7 +667,7 @@
         }
 
         .asset-card:hover .asset-preview img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
 
         .asset-preview .loading {
@@ -626,16 +676,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .loading-spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid var(--border);
+            width: 36px;
+            height: 36px;
+            border: 3px solid var(--border-light);
             border-top-color: var(--accent);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
 
         @keyframes spin {
@@ -648,7 +698,7 @@
         }
 
         .asset-info {
-            padding: 16px;
+            padding: 18px;
             border-top: 1px solid var(--border);
         }
 
@@ -659,16 +709,18 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: var(--text-primary);
         }
 
         .asset-format {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'IBM Plex Mono', monospace;
             font-size: 0.75rem;
             color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
 
-        /* Modal */
+        /* ========== MODAL ========== */
         .modal {
             display: none;
             position: fixed;
@@ -676,17 +728,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 24px;
         }
 
         .modal.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.25s ease;
         }
 
         @keyframes fadeIn {
@@ -696,18 +748,19 @@
 
         .modal-content {
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
             max-width: 90vw;
             max-height: 90vh;
             overflow: hidden;
             animation: modalSlide 0.3s ease;
+            box-shadow: var(--shadow-medium);
         }
 
         @keyframes modalSlide {
             from {
                 opacity: 0;
-                transform: scale(0.95) translateY(20px);
+                transform: scale(0.96) translateY(12px);
             }
             to {
                 opacity: 1;
@@ -717,7 +770,7 @@
 
         .modal-preview {
             width: 600px;
-            height: 500px;
+            height: 480px;
             background: var(--bg-primary);
             display: flex;
             align-items: center;
@@ -725,21 +778,22 @@
         }
 
         .modal-info {
-            padding: 24px;
+            padding: 24px 28px;
             border-top: 1px solid var(--border);
         }
 
         .modal-name {
             font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
         }
 
         .modal-path {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'IBM Plex Mono', monospace;
             font-size: 0.85rem;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .modal-hint {
@@ -749,13 +803,13 @@
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
+            top: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
             color: var(--text-primary);
             font-size: 1.5rem;
             cursor: pointer;
@@ -766,25 +820,26 @@
         }
 
         .modal-close:hover {
-            background: var(--error);
-            border-color: var(--error);
+            background: rgba(248, 113, 113, 0.1);
+            border-color: rgba(248, 113, 113, 0.3);
+            color: var(--error);
         }
 
-        /* Progress Bar */
+        /* ========== PROGRESS BAR ========== */
         .render-progress {
             position: fixed;
-            bottom: 24px;
+            bottom: 28px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 16px 24px;
-            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            padding: 18px 28px;
+            border-radius: var(--radius-lg);
             display: none;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             z-index: 200;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: var(--shadow-medium);
         }
 
         .render-progress.active {
@@ -795,7 +850,7 @@
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateX(-50%) translateY(20px);
+                transform: translateX(-50%) translateY(16px);
             }
             to {
                 opacity: 1;
@@ -804,7 +859,7 @@
         }
 
         .progress-bar {
-            width: 200px;
+            width: 180px;
             height: 8px;
             background: var(--bg-card);
             border-radius: 4px;
@@ -813,18 +868,19 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent) 0%, #8b5cf6 100%);
+            background: linear-gradient(90deg, var(--accent) 0%, #2dd4bf 100%);
             width: 0%;
             transition: width 0.3s ease;
+            border-radius: 4px;
         }
 
         .progress-text {
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             color: var(--text-secondary);
             white-space: nowrap;
         }
 
-        /* Loading Overlay */
+        /* ========== LOADING OVERLAY ========== */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -832,7 +888,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(10, 10, 15, 0.95);
+            background: rgba(21, 21, 24, 0.95);
             z-index: 500;
             flex-direction: column;
             align-items: center;
@@ -851,20 +907,19 @@
 
         .loading-overlay-text {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .loading-overlay-progress {
             color: var(--accent);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
-        /* Hidden state */
         .hidden {
             display: none !important;
         }
 
-        /* Responsive */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .header-inner {
                 flex-wrap: wrap;
@@ -877,11 +932,16 @@
             }
             
             .auth-box {
-                padding: 32px 24px;
+                padding: 36px 28px;
             }
             
             .drop-zone-box {
-                padding: 40px 24px;
+                padding: 48px 28px;
+            }
+
+            .stats-inner {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -889,78 +949,19 @@
 <body>
     <div class="bg-gradient"></div>
 
-    <!-- Login Page -->
-    <div class="auth-container" id="loginPage">
-        <div class="auth-box">
-            <div class="auth-logo">
-                <div class="auth-logo-icon">📦</div>
-                <span class="auth-logo-text">AssetVault</span>
-            </div>
-            <h1 class="auth-title">Welcome back</h1>
-            <p class="auth-subtitle">Sign in to browse your 3D assets</p>
-            
-            <div class="auth-error" id="loginError"></div>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="loginEmail" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Sign In</button>
-            </form>
-            
-            <p class="auth-footer">
-                Don't have an account? <a href="#" id="showSignup">Create one</a>
-            </p>
-        </div>
-    </div>
+    <!-- Login Page - Hidden -->
+    <div class="auth-container hidden" id="loginPage"></div>
 
-    <!-- Signup Page -->
-    <div class="auth-container hidden" id="signupPage">
-        <div class="auth-box">
-            <div class="auth-logo">
-                <div class="auth-logo-icon">📦</div>
-                <span class="auth-logo-text">AssetVault</span>
-            </div>
-            <h1 class="auth-title">Create account</h1>
-            <p class="auth-subtitle">Start browsing your 3D assets visually</p>
-            
-            <div class="auth-error" id="signupError"></div>
-            
-            <form id="signupForm">
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" class="form-input" id="signupUsername" placeholder="coolartist99" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="signupPassword" placeholder="••••••••" required minlength="6">
-                </div>
-                <button type="submit" class="btn btn-primary">Create Account</button>
-            </form>
-            
-            <p class="auth-footer">
-                Already have an account? <a href="#" id="showLogin">Sign in</a>
-            </p>
-        </div>
-    </div>
+    <!-- Signup Page - Hidden -->
+    <div class="auth-container hidden" id="signupPage"></div>
 
     <!-- Main App -->
-    <div class="app-container" id="appContainer">
-        <!-- Header -->
+    <div class="app-container active" id="appContainer">
         <header class="header">
             <div class="header-inner">
                 <div class="header-logo">
-                    <div class="header-logo-icon">📦</div>
-                    <span class="header-logo-text">AssetVault</span>
+                    <div class="header-logo-icon">🎮</div>
+                    <span class="header-logo-text">vib3D</span>
                 </div>
                 
                 <div class="header-search">
@@ -972,19 +973,14 @@
                 </div>
                 
                 <div class="header-actions">
-                    <div class="header-user">
-                        <div class="header-avatar" id="userAvatar">U</div>
-                        <span class="header-username" id="userName">User</span>
-                    </div>
-                    <button class="btn-logout" id="logoutBtn">Sign Out</button>
+                    <button class="btn-secondary" id="newFolderBtn">Load New Folder</button>
                 </div>
             </div>
         </header>
 
-        <!-- Drop Zone -->
         <div class="drop-zone" id="dropZone">
             <div class="drop-zone-box" id="dropBox">
-                <div class="drop-zone-icon">🎮</div>
+                <div class="drop-zone-icon">📂</div>
                 <h2 class="drop-zone-title">Drop your assets here</h2>
                 <p class="drop-zone-subtitle">Drag and drop a folder to generate visual previews</p>
                 <div class="drop-zone-formats">
@@ -996,7 +992,6 @@
             </div>
         </div>
 
-        <!-- Stats Bar -->
         <div class="stats-bar" id="statsBar">
             <div class="stats-inner">
                 <div class="stats-info">
@@ -1014,23 +1009,19 @@
                         <span>Size</span>
                         <input type="range" class="size-slider" id="sizeSlider" min="160" max="320" value="220">
                     </div>
-                    <button class="btn-new-folder" id="newFolderBtn">Load New Folder</button>
                 </div>
             </div>
         </div>
 
-        <!-- Asset Container -->
         <div class="asset-container" id="assetContainer"></div>
     </div>
 
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-overlay-text">Scanning your assets...</div>
         <div class="loading-overlay-progress" id="loadingProgress"></div>
     </div>
 
-    <!-- Render Progress -->
     <div class="render-progress" id="renderProgress">
         <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
@@ -1038,7 +1029,6 @@
         <div class="progress-text" id="progressText">Rendering previews...</div>
     </div>
 
-    <!-- Modal -->
     <div class="modal" id="modal">
         <button class="modal-close" id="modalClose">×</button>
         <div class="modal-content">
@@ -1046,16 +1036,12 @@
             <div class="modal-info">
                 <h3 class="modal-name" id="modalName"></h3>
                 <p class="modal-path" id="modalPath"></p>
-                <p class="modal-hint">Click and drag to rotate</p>
+                <p class="modal-hint">Left-drag to rotate • Right-drag to pan • Scroll to zoom</p>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    
-    <!-- Three.js and loaders -->
+    <!-- Three.js -->
     <script src="https://cdn.jsdelivr.net/npm/fflate@0.8.0/umd/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>window.fflate = fflate;</script>
@@ -1064,27 +1050,6 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <script>
-        // Firebase Configuration - Replace with your own config!
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // Initialize Firebase
-        let auth;
-        let currentUser = null;
-        
-        // Check if Firebase config is set up
-        const isFirebaseConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
-        
-        if (isFirebaseConfigured) {
-            firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-        }
 
         // State
         let assets = [];
@@ -1094,18 +1059,6 @@
         let sharedCamera = null;
 
         // DOM Elements
-        const loginPage = document.getElementById('loginPage');
-        const signupPage = document.getElementById('signupPage');
-        const appContainer = document.getElementById('appContainer');
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
-        const loginError = document.getElementById('loginError');
-        const signupError = document.getElementById('signupError');
-        const showSignupLink = document.getElementById('showSignup');
-        const showLoginLink = document.getElementById('showLogin');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userAvatar = document.getElementById('userAvatar');
-        const userName = document.getElementById('userName');
         const dropZone = document.getElementById('dropZone');
         const dropBox = document.getElementById('dropBox');
         const statsBar = document.getElementById('statsBar');
@@ -1125,107 +1078,7 @@
 
         const supportedFormats = ['.fbx', '.obj', '.gltf', '.glb'];
 
-        // Auto-login for demo/preview
-        showApp({ email: 'demo@example.com', displayName: 'Demo User' });
-
-        // Auth Functions
-        function showError(element, message) {
-            element.textContent = message;
-            element.classList.add('show');
-            setTimeout(() => element.classList.remove('show'), 5000);
-        }
-
-        function showApp(user) {
-            currentUser = user;
-            loginPage.classList.add('hidden');
-            signupPage.classList.add('hidden');
-            appContainer.classList.add('active');
-            
-            const displayName = user.displayName || user.email?.split('@')[0] || 'User';
-            userName.textContent = displayName;
-            userAvatar.textContent = displayName.charAt(0).toUpperCase();
-        }
-
-        function showLogin() {
-            appContainer.classList.remove('active');
-            signupPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-            currentUser = null;
-        }
-
-        // Auth Event Listeners
-        showSignupLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginPage.classList.add('hidden');
-            signupPage.classList.remove('hidden');
-        });
-
-        showLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupPage.classList.add('hidden');
-            loginPage.classList.remove('hidden');
-        });
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            if (!isFirebaseConfigured) {
-                // Demo mode - skip auth
-                showApp({ email, displayName: email.split('@')[0] });
-                return;
-            }
-            
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                showApp(userCredential.user);
-            } catch (error) {
-                showError(loginError, error.message);
-            }
-        });
-
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('signupUsername').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            if (!isFirebaseConfigured) {
-                // Demo mode - skip auth
-                showApp({ email, displayName: username });
-                return;
-            }
-            
-            try {
-                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                await userCredential.user.updateProfile({ displayName: username });
-                showApp(userCredential.user);
-            } catch (error) {
-                showError(signupError, error.message);
-            }
-        });
-
-        logoutBtn.addEventListener('click', async () => {
-            if (isFirebaseConfigured) {
-                await auth.signOut();
-            }
-            showLogin();
-            resetBrowser();
-        });
-
-        // Check auth state on load
-        if (isFirebaseConfigured) {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    showApp(user);
-                } else {
-                    showLogin();
-                }
-            });
-        }
-
-        // Three.js Setup
+        // Three.js
         function initSharedRenderer() {
             if (sharedRenderer) return;
 
@@ -1235,10 +1088,10 @@
             });
             sharedRenderer.setSize(400, 400);
             sharedRenderer.setPixelRatio(1);
-            sharedRenderer.setClearColor(0x0a0a0f);
+            sharedRenderer.setClearColor(0x151518);
 
             sharedScene = new THREE.Scene();
-            sharedScene.background = new THREE.Color(0x0a0a0f);
+            sharedScene.background = new THREE.Color(0x151518);
 
             const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
             sharedScene.add(ambientLight);
@@ -1258,7 +1111,7 @@
             sharedCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 100000);
         }
 
-        // Drop Zone Events
+        // Drop events
         dropBox.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropBox.classList.add('drag-over');
@@ -1285,7 +1138,6 @@
                     const entry = items[i].webkitGetAsEntry();
                     if (entry) entries.push(entry);
                 }
-                
                 for (const entry of entries) {
                     await processEntry(entry, '');
                 }
@@ -1343,9 +1195,8 @@
                 const entries = [];
                 function readBatch() {
                     reader.readEntries((batch) => {
-                        if (batch.length === 0) {
-                            resolve(entries);
-                        } else {
+                        if (batch.length === 0) resolve(entries);
+                        else {
                             entries.push(...batch);
                             readBatch();
                         }
@@ -1367,9 +1218,7 @@
         function renderBrowser() {
             const categories = {};
             assets.forEach(asset => {
-                if (!categories[asset.category]) {
-                    categories[asset.category] = [];
-                }
+                if (!categories[asset.category]) categories[asset.category] = [];
                 categories[asset.category].push(asset);
             });
 
@@ -1385,12 +1234,17 @@
                 html += `
                     <div class="category" data-category="${category}">
                         <div class="category-header">
+                            <span class="category-toggle">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m6 9 6 6 6-6"/>
+                                </svg>
+                            </span>
                             <span class="category-name">${category}</span>
                             <span class="category-count">${categoryAssets.length}</span>
                         </div>
                         <div class="asset-grid">
                             ${categoryAssets.map((asset) => {
-                                const delay = Math.min(cardIndex * 0.02, 0.5);
+                                const delay = Math.min(cardIndex * 0.015, 0.4);
                                 cardIndex++;
                                 return `
                                 <div class="asset-card" data-asset-id="${asset.path}" style="animation-delay: ${delay}s">
@@ -1412,14 +1266,21 @@
             });
 
             assetContainer.innerHTML = html;
-
             dropZone.classList.add('hidden');
             statsBar.classList.add('active');
             assetContainer.classList.add('active');
             loadingOverlay.classList.remove('active');
 
+            // Category collapse toggle
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('collapsed');
+                });
+            });
+
             document.querySelectorAll('.asset-card').forEach(card => {
-                card.addEventListener('click', () => {
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     const asset = assets.find(a => a.path === card.dataset.assetId);
                     if (asset) openModal(asset);
                 });
@@ -1459,9 +1320,7 @@
                     }
                 }
 
-                if (i % 5 === 0) {
-                    await new Promise(r => setTimeout(r, 10));
-                }
+                if (i % 5 === 0) await new Promise(r => setTimeout(r, 10));
             }
 
             renderProgress.classList.remove('active');
@@ -1472,7 +1331,6 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const arrayBuffer = e.target.result;
-                    
                     try {
                         let object = null;
 
@@ -1486,18 +1344,13 @@
                         } else if (asset.ext === '.gltf' || asset.ext === '.glb') {
                             const loader = new THREE.GLTFLoader();
                             loader.parse(arrayBuffer, '', (gltf) => {
-                                const dataUrl = renderObjectToImage(gltf.scene);
-                                resolve(dataUrl);
-                            }, (err) => reject(err));
+                                resolve(renderObjectToImage(gltf.scene));
+                            }, reject);
                             return;
                         }
 
-                        if (object) {
-                            const dataUrl = renderObjectToImage(object);
-                            resolve(dataUrl);
-                        } else {
-                            resolve(null);
-                        }
+                        if (object) resolve(renderObjectToImage(object));
+                        else resolve(null);
                     } catch (err) {
                         reject(err);
                     }
@@ -1510,10 +1363,9 @@
         function renderObjectToImage(object) {
             const toRemove = [];
             sharedScene.traverse((child) => {
-                if (child.isMesh || child.isGroup || child.isObject3D) {
-                    if (!child.isLight && child !== sharedScene && child.parent === sharedScene) {
-                        toRemove.push(child);
-                    }
+                if ((child.isMesh || child.isGroup || child.isObject3D) &&
+                    !child.isLight && child !== sharedScene && child.parent === sharedScene) {
+                    toRemove.push(child);
                 }
             });
             toRemove.forEach(obj => sharedScene.remove(obj));
@@ -1539,7 +1391,6 @@
             
             const center = box.getCenter(new THREE.Vector3());
             const size = box.getSize(new THREE.Vector3());
-
             object.position.sub(center);
 
             const maxDim = Math.max(size.x, size.y, size.z);
@@ -1550,45 +1401,36 @@
             sharedCamera.updateProjectionMatrix();
 
             sharedRenderer.render(sharedScene, sharedCamera);
-
             const dataUrl = sharedRenderer.domElement.toDataURL('image/png');
 
             sharedScene.remove(object);
-
             object.traverse((child) => {
                 if (child.geometry) child.geometry.dispose();
                 if (child.material) {
-                    if (Array.isArray(child.material)) {
-                        child.material.forEach(m => m.dispose());
-                    } else {
-                        child.material.dispose();
-                    }
+                    if (Array.isArray(child.material)) child.material.forEach(m => m.dispose());
+                    else child.material.dispose();
                 }
             });
 
             return dataUrl;
         }
 
-        // Search
         searchBox.addEventListener('input', () => {
             const query = searchBox.value.toLowerCase();
             document.querySelectorAll('.asset-card').forEach(card => {
                 const name = card.querySelector('.asset-name').textContent.toLowerCase();
                 card.style.display = name.includes(query) ? '' : 'none';
             });
-
             document.querySelectorAll('.category').forEach(cat => {
-                const visibleCards = cat.querySelectorAll('.asset-card:not([style*="display: none"])');
-                cat.style.display = visibleCards.length > 0 ? '' : 'none';
+                const visible = cat.querySelectorAll('.asset-card:not([style*="display: none"])');
+                cat.style.display = visible.length > 0 ? '' : 'none';
             });
         });
 
-        // Size Slider
         sizeSlider.addEventListener('input', (e) => {
             document.documentElement.style.setProperty('--card-size', e.target.value + 'px');
         });
 
-        // New Folder Button
         newFolderBtn.addEventListener('click', resetBrowser);
 
         function resetBrowser() {
@@ -1604,7 +1446,6 @@
             }
         }
 
-        // Modal
         modalClose.addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => {
             if (e.target === modal) modal.classList.remove('active');
@@ -1615,7 +1456,7 @@
             document.getElementById('modalPath').textContent = asset.path;
             
             const modalPreview = document.getElementById('modalPreview');
-            modalPreview.innerHTML = '<div class="loading"><div class="loading-spinner"></div><span>Loading preview...</span></div>';
+            modalPreview.innerHTML = '<div class="loading"><div class="loading-spinner"></div><span>Loading...</span></div>';
             
             modal.classList.add('active');
             loadModelForModal(asset);
@@ -1629,67 +1470,47 @@
                 let object = null;
 
                 if (asset.ext === '.fbx') {
-                    const loader = new THREE.FBXLoader();
-                    object = loader.parse(arrayBuffer, '');
+                    object = new THREE.FBXLoader().parse(arrayBuffer, '');
                 } else if (asset.ext === '.obj') {
-                    const loader = new THREE.OBJLoader();
-                    const text = new TextDecoder().decode(arrayBuffer);
-                    object = loader.parse(text);
+                    object = new THREE.OBJLoader().parse(new TextDecoder().decode(arrayBuffer));
                 } else if (asset.ext === '.gltf' || asset.ext === '.glb') {
-                    const loader = new THREE.GLTFLoader();
                     object = await new Promise((resolve, reject) => {
-                        loader.parse(arrayBuffer, '', (gltf) => resolve(gltf.scene), reject);
+                        new THREE.GLTFLoader().parse(arrayBuffer, '', (gltf) => resolve(gltf.scene), reject);
                     });
                 }
 
-                if (object) {
-                    createInteractivePreview(modalPreview, object);
-                } else {
-                    modalPreview.innerHTML = '<span class="error">Could not load preview</span>';
-                }
+                if (object) createInteractivePreview(modalPreview, object);
+                else modalPreview.innerHTML = '<span class="error">Could not load</span>';
             } catch (err) {
-                modalPreview.innerHTML = '<span class="error">Error loading model</span>';
+                modalPreview.innerHTML = '<span class="error">Error loading</span>';
             }
         }
 
         function createInteractivePreview(container, object) {
             container.innerHTML = '';
 
-            const width = 600;
-            const height = 500;
-
+            const width = 600, height = 480;
             const scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0a0f);
+            scene.background = new THREE.Color(0x151518);
 
             const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100000);
-
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(width, height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             container.appendChild(renderer.domElement);
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-            scene.add(ambientLight);
-
-            const light1 = new THREE.DirectionalLight(0xffffff, 0.8);
-            light1.position.set(1, 1, 1);
-            scene.add(light1);
-
-            const light2 = new THREE.DirectionalLight(0xffffff, 0.6);
-            light2.position.set(-1, 1, -1);
-            scene.add(light2);
-
-            const light3 = new THREE.DirectionalLight(0xffffff, 0.4);
-            light3.position.set(0, -1, 0);
-            scene.add(light3);
+            scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+            const l1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            l1.position.set(1, 1, 1);
+            scene.add(l1);
+            const l2 = new THREE.DirectionalLight(0xffffff, 0.6);
+            l2.position.set(-1, 1, -1);
+            scene.add(l2);
 
             object.traverse((child) => {
                 if (child.isMesh) {
                     child.material = new THREE.MeshStandardMaterial({ 
-                        color: 0x7799bb,
-                        roughness: 0.5,
-                        metalness: 0.1,
-                        side: THREE.DoubleSide
+                        color: 0x7799bb, roughness: 0.5, metalness: 0.1, side: THREE.DoubleSide
                     });
                 }
             });
@@ -1702,39 +1523,147 @@
             object.position.sub(center);
 
             const maxDim = Math.max(size.x, size.y, size.z);
-            const distance = Math.max(maxDim * 2.5, 1);
-            camera.position.set(distance * 0.7, distance * 0.5, distance * 0.7);
+            const dist = Math.max(maxDim * 2.5, 1);
+            camera.position.set(dist * 0.7, dist * 0.5, dist * 0.7);
             camera.lookAt(0, 0, 0);
 
             let isDragging = false;
-            let previousMousePosition = { x: 0, y: 0 };
+            let prev = { x: 0, y: 0 };
+            
+            // Zoom settings
+            const minZoom = dist * 0.3;  // Can zoom in to 30% of original distance
+            const maxZoom = dist * 4;     // Can't get further than 4x original distance
+            let currentZoom = dist;       // Start at default distance (50% on the bar)
+
+            // Create zoom indicator bar
+            const zoomBar = document.createElement('div');
+            zoomBar.style.cssText = `
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100px;
+                height: 4px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 2px;
+                overflow: hidden;
+            `;
+            const zoomFill = document.createElement('div');
+            zoomFill.style.cssText = `
+                height: 100%;
+                background: linear-gradient(90deg, var(--accent, #5eead4) 0%, #2dd4bf 100%);
+                border-radius: 2px;
+                transition: width 0.15s ease;
+                width: 50%;
+            `;
+            zoomBar.appendChild(zoomFill);
+            container.style.position = 'relative';
+            container.appendChild(zoomBar);
+
+            function updateZoomBar() {
+                // Map currentZoom so that dist = 50%, minZoom = 100%, maxZoom = 0%
+                let percent;
+                if (currentZoom <= dist) {
+                    // Zooming in: map minZoom->dist to 100%->50%
+                    percent = 50 + ((dist - currentZoom) / (dist - minZoom)) * 50;
+                } else {
+                    // Zooming out: map dist->maxZoom to 50%->0%
+                    percent = 50 - ((currentZoom - dist) / (maxZoom - dist)) * 50;
+                }
+                zoomFill.style.width = Math.max(5, Math.min(100, percent)) + '%';
+            }
+            updateZoomBar();
+
+            let isPanning = false;
+            const panLimitX = maxDim * 0.4; // Tighter horizontal
+            const panLimitUp = maxDim * 0.4; // Tighter up
+            const panLimitDown = maxDim * 0.8; // More space down
+
+            // Prevent context menu on right click
+            renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
 
             renderer.domElement.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                previousMousePosition = { x: e.clientX, y: e.clientY };
+                if (e.button === 0) {
+                    // Left click - rotate
+                    isDragging = true;
+                } else if (e.button === 2) {
+                    // Right click - pan
+                    isPanning = true;
+                }
+                prev = { x: e.clientX, y: e.clientY };
             });
-
-            document.addEventListener('mouseup', () => isDragging = false);
-
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                isPanning = false;
+            });
             document.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-
-                const deltaX = e.clientX - previousMousePosition.x;
-                const deltaY = e.clientY - previousMousePosition.y;
-
-                object.rotation.y += deltaX * 0.01;
-                object.rotation.x += deltaY * 0.01;
-
-                previousMousePosition = { x: e.clientX, y: e.clientY };
+                if (isDragging) {
+                    // Rotate
+                    object.rotation.y += (e.clientX - prev.x) * 0.01;
+                    object.rotation.x += (e.clientY - prev.y) * 0.01;
+                    prev = { x: e.clientX, y: e.clientY };
+                } else if (isPanning) {
+                    const deltaX = e.clientX - prev.x;
+                    const deltaY = e.clientY - prev.y;
+                    
+                    // Get camera right and up vectors
+                    const cameraRight = new THREE.Vector3();
+                    const cameraUp = new THREE.Vector3();
+                    
+                    // Camera's local X axis (right)
+                    camera.matrixWorld.extractBasis(cameraRight, cameraUp, new THREE.Vector3());
+                    
+                    const scale = currentZoom / 600;
+                    
+                    // Move object along camera's right axis (horizontal mouse = horizontal screen)
+                    object.position.addScaledVector(cameraRight, deltaX * scale);
+                    // Move object along world Y axis (vertical mouse = vertical screen)
+                    object.position.y += -deltaY * scale;
+                    
+                    // Clamp with different limits per direction
+                    object.position.x = Math.max(-panLimitX, Math.min(panLimitX, object.position.x));
+                    object.position.y = Math.max(-panLimitDown, Math.min(panLimitUp, object.position.y));
+                    object.position.z = Math.max(-panLimitX, Math.min(panLimitX, object.position.z));
+                    
+                    prev = { x: e.clientX, y: e.clientY };
+                }
             });
 
-            let animationId;
+            // Scroll to zoom with limits
+            renderer.domElement.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const zoomSpeed = 0.1;
+                const zoomAmount = dist * zoomSpeed;
+                
+                if (e.deltaY < 0 && currentZoom > minZoom) {
+                    // Zoom in
+                    currentZoom = Math.max(minZoom, currentZoom - zoomAmount);
+                } else if (e.deltaY > 0 && currentZoom < maxZoom) {
+                    // Zoom out
+                    currentZoom = Math.min(maxZoom, currentZoom + zoomAmount);
+                }
+                
+                // Update camera position
+                const direction = new THREE.Vector3();
+                camera.getWorldDirection(direction);
+                camera.position.set(
+                    currentZoom * 0.7 / dist * dist * 0.7,
+                    currentZoom * 0.5 / dist * dist * 0.5,
+                    currentZoom * 0.7 / dist * dist * 0.7
+                );
+                camera.position.setLength(currentZoom);
+                camera.lookAt(0, 0, 0);
+                
+                updateZoomBar();
+            }, { passive: false });
+
+            let animId;
             function animate() {
                 if (modal.classList.contains('active')) {
                     renderer.render(scene, camera);
-                    animationId = requestAnimationFrame(animate);
+                    animId = requestAnimationFrame(animate);
                 } else {
-                    cancelAnimationFrame(animationId);
+                    cancelAnimationFrame(animId);
                     renderer.dispose();
                 }
             }
