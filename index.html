@@ -2252,19 +2252,22 @@
                                     const textureLoader = new THREE.TextureLoader();
                                     const texture = await new Promise((res) => {
                                         textureLoader.load(dataUrl, (t) => {
-                                            t.flipY = false;
+                                            t.flipY = true;
+                                            t.colorSpace = THREE.SRGBColorSpace;
                                             res(t);
                                         }, undefined, () => res(null));
                                     });
                                     
                                     if (texture) {
                                         object.traverse((child) => {
-                                            if (child.isMesh && child.material) {
+                                            if (child.isMesh) {
                                                 const materials = Array.isArray(child.material) ? child.material : [child.material];
                                                 materials.forEach(m => {
-                                                    m.map = texture;
-                                                    m.color = new THREE.Color(1, 1, 1);
-                                                    m.needsUpdate = true;
+                                                    if (m) {
+                                                        m.map = texture;
+                                                        m.color = new THREE.Color(1, 1, 1);
+                                                        m.needsUpdate = true;
+                                                    }
                                                 });
                                             }
                                         });
@@ -2714,7 +2717,8 @@
                             const textureLoader = new THREE.TextureLoader();
                             const texture = await new Promise((res) => {
                                 textureLoader.load(dataUrl, (t) => {
-                                    t.flipY = false;
+                                    t.flipY = true;
+                                    t.colorSpace = THREE.SRGBColorSpace;
                                     res(t);
                                 }, undefined, () => res(null));
                             });
